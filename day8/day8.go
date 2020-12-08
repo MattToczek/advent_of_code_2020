@@ -65,7 +65,6 @@ func do_action(action_object_map map[int]action_object, key int, ind_so_far []in
 		next_key = key + 1
 		count += action_object_map[key].number
 	}
-	fmt.Println(action_object_map[key])
 	return do_action(action_object_map, next_key, ind_so_far, count)
 }
 
@@ -86,7 +85,6 @@ func check_for_no_loop(action_object_map map[int]action_object, key int, ind_so_
 		next_key = key + 1
 		count += action_object_map[key].number
 	}
-	fmt.Println(action_object_map[key])
 	return check_for_no_loop(action_object_map, next_key, ind_so_far, count)
 }
 
@@ -137,14 +135,9 @@ func main() {
 	input := get_input_slice("day8_input.txt")
 	action_object_map := split_to_map(input)
 	var empty_slice []int
-	fmt.Print(do_action(action_object_map, 0, empty_slice, 0))
+	fmt.Println(do_action(action_object_map, 0, empty_slice, 0))
 
-	// var test_ao action_object
-	// test_ao.action = "nop"
-	// test_ao.number = 0
-	// var test_object_map map[int]action_object = make(map[int]action_object)
-	// test_object_map[0] = test_ao
-	fmt.Print(check_map_for_no_loop(action_object_map))
+	fmt.Println(check_map_for_no_loop(action_object_map))
 
 }
 
