@@ -90,10 +90,6 @@ func check_for_no_loop(action_object_map map[int]action_object, key int, ind_so_
 	return check_for_no_loop(action_object_map, next_key, ind_so_far, count)
 }
 
-func create_new_map_and_test(action_object_map map[int]action_object) int? {
-
-}
-
 func check_map_for_no_loop(action_object_map map[int]action_object) int {
 	for key, value := range action_object_map {
 		if value.action == "jmp" {
