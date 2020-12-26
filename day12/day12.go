@@ -58,7 +58,6 @@ func follow_directions(input []struct {
 	facing_index := 0
 	facing := "E"
 	for i := 0; i < len(input); i++ {
-		fmt.Println("Input:", input[i])
 		switch input[i].string {
 		case "R":
 			change := input[i].int / 90
@@ -83,7 +82,10 @@ func follow_directions(input []struct {
 		}
 		position = move(input[i].string, input[i].int, position)
 	}
+	return get_manhattan_distance(position)
+}
 
+func get_manhattan_distance(position Position) int {
 	var sum_a int
 	var sum_b int
 
@@ -120,18 +122,68 @@ func move(compass_point string, distance int, current_position Position) Positio
 		current_position.E -= distance
 		break
 	}
-	fmt.Println("Direction:", compass_point, "Distance:", distance, "New Position:", current_position)
 	return current_position
+}
+
+func change_axis(current_axis Position, turns int) Position {
+	values := []int{current_axis.N, current_axis.E, current_axis.S, current_axis.W}
+	values = append(values[turns:], values[:turns]...)
+	return Position{values[0], values[1], values[2], values[3]}
+}
+
+func way_point_directions(input []struct {
+	string
+	int
+}) int {
+	way_point := Position{1, 10, -1, -10}
+	current_position := Position{0, 0, 0, 0}
+	for i := 0; i < len(input); i++ {
+		switch input[i].string {
+		case "R":
+			change := input[i].int / 90
+			way_point = change_axis(way_point, 4-change)
+			break
+		case "L":
+			change := input[i].int / 90
+			way_point = change_axis(way_point, change)
+			break
+		case "F":
+			if way_point.N >= 0 {
+				current_position.N += (way_point.N * input[i].int)
+				current_position.S -= (way_point.N * input[i].int)
+			}
+			if way_point.S >= 0 {
+				current_position.S += (way_point.S * input[i].int)
+				current_position.N -= (way_point.S * input[i].int)
+			}
+			if way_point.E >= 0 {
+				current_position.E += (way_point.E * input[i].int)
+				current_position.W -= (way_point.E * input[i].int)
+			}
+			if way_point.W >= 0 {
+				current_position.W += (way_point.W * input[i].int)
+				current_position.E -= (way_point.W * input[i].int)
+			}
+			break
+		default:
+			way_point = move(input[i].string, input[i].int, way_point)
+			break
+		}
+
+	}
+
+	return get_manhattan_distance(current_position)
 }
 
 func main() {
 	input := get_map_slice(get_input_slice("day12_input.txt"))
 	fmt.Println(follow_directions(input))
+	fmt.Println(way_point_directions(input))
 }
 
 type Position struct {
 	N int
-	S int
 	E int
+	S int
 	W int
 }
